@@ -1,0 +1,100 @@
+{- 三日目 -}
+-- fastcat: []の中全て合わせて1サイクル
+-- cat: オリジナルのスピードを維持
+-- stack: パターンを並行して演奏する。マルチトラック
+d1 $ stack
+[
+    sound "bd bd*2",
+    sound "hh*2 [sn cp] cp future*4",
+    sound (samples "arpy*8" (run 16))
+]
+
+-- stackの前後に、エフェクトや関数を加えていくことができる
+d1
+$ every 4 (slow 2)
+$ whenmod 5 3 (# speed "0.75 1.5")
+$ stack
+[
+    sound "bd bd*2",
+    sound "hh*2 [sn cp] cp future*4",
+    sound (samples "arpy*8" (run 16))
+]
+# speed "[[1 0.5], [1.5 2]*2]/3"
+
+---- 構造を作る
+-- 1
+do
+    setcps(75/120)
+    d1
+        $every 4 (rev)
+        $sometimesBy 0.2 (slow 2)
+        $sometimesBy 0.8 (jux (iter 4))
+        $stack
+        [
+        sound "ifdrums(3, 8, 0)",
+        sound "bd(3, 8, 3)",
+        sound "glitch(2, 8)"
+        ]
+        #n (irand 64)
+        #pan (rand)
+        #lpf (rangex 800 18000 $slow 4 $sine) #resonance "0.2"
+        #delay "0.3" #delaytime "1.125" #delayfeedback "0.5" #lock 1
+        #gain "1.0"
+
+-- 1:自分でもやってみる
+do
+    setcps(75/120)
+    d1
+        $ every 4 (rev)
+        $ sometimesBy 0.2 (slow 2)
+        $ sometimesBy 0.8 (jux (iter 4))
+        $ stack
+        [
+            sound "bd(3, 8, 3)",
+            sound "ifdrums(3, 8, 0)",
+            sound "glitch(2, 8)"
+        ]
+        # n (irand 64)
+        # pan (rand)
+        # lpf (rangex 800 18000 $ slow 4 $ sine)
+        # resonance "0.2"
+        # delay "0.3" # delaytime "1.125"
+        # delayfb "0.5" # lock 1
+        # gain "1.0"
+
+
+
+-- 2
+do
+    setcps(65/120)
+    d1
+        $jux (rev)
+        $s "supersaw(5, 16)"
+        #note "c4'sus4"
+        |+| note "[0, 7][7, 14][14, 21]"
+        |+| note "[0, 7, 12]"
+        |+| note "0"
+        #lpf (range 1000 8000 $rand) #resonance "0.2"
+        #sustain "0.1"
+        #gain "1.3"
+        #shape "0.7"
+        #delay "0.3" #delaytime "1.125" #delayfeedback "0.5" #lock 1
+        #room "0.1" #size "0.4"
+
+--2:自分でもやってみる
+
+d1
+    $jux (rev)
+    $ s "supersaw(5, 16)"
+    # note "c4'sus4"
+    |+| note "[0, 7][7, 14][14, 21]"
+    |+| note "[0, 7, 12]"
+    |+| note "0"
+    # lpf (range 1000 8000 $rand)
+    # resonance "0.2"
+    # sustain "0.1"
+    # gain "1.3"
+    # shape "0.3"
+    # delay "0.3" # delaytime "1.125"
+    # delayfeedback "0.5" # lock 1
+    # room "0.1" # size "0.4"

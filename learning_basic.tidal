@@ -1,0 +1,94 @@
+{- 一日目 -}
+-- Alt + Ctrl + h でhush
+
+-- 休符
+d1 $ sound "bd ~ bd ~ bd ~ bd ~ bd bd"
+
+-- 停止
+d1 silence
+
+hush
+
+-- パターンのグループ化: []で囲まれた部分が、一つのステップになる。[]内は均等に分割される
+d1 $ sound "[bd sn sn] cp" --[]内とcpの長さは同じ
+
+-- パターンのレイヤー化: []内で、カンマで区切ると、グループ化ではなくレイヤー化される。二つのパターンを並行して再生できる。
+d1 $ sound "[bd bd bd, sn cp sn cp]" --ポリリズム！
+
+--パターンの繰り返し: *と/で繰返しの回数をコントロールできる
+d1 $ sound "bd*2" -- = "bd bd bd bd"
+
+d1 $ sound "bd/2" -- = 2サイクルに一回演奏される
+
+-- シーケンスを変化させる関数
+-- rev: パターンを反転
+-- every (int) (func): int 回に一回だけ、funcを適用
+-- slow (int): int分の一のスピードにする
+-- density (int): int倍のスピードにする
+
+-- エフェクト: パターンの後ろに＃をつけてエフェクトを追加
+d1 $sound "bd*4" # gain "1.2 1.0 1.0 1.0"
+-- gain: 音量
+-- delay
+-- speed: サンプルの再生スピード変更
+-- up: 半音ずつ再生スピード変更
+
+
+{- 二日目 -}
+
+-- テンポ指定
+setcps (130/60/4)
+
+-- ユークリッドシーケンス: E(選ぶリズム, 分割数, 左シフト)
+d1 $ sound "bd(7, 16, 14)"
+
+d2 $ sound "hh(10, 16)"
+
+d3 $ sound "sn(2, 9)" # speed "2 -1"
+
+-- run関数: 指定された最大値までの整数のパターンを返す。レンジ。
+d1 $ sound "drum cp hh arpy" # n ( run 4 )
+
+-- アルゴリズミックなサンプル選択
+d1 $ sound $ samples "drum*4" "0 1 2 3"
+
+d1 $ sound $ samples "drum*4" (run 4) --上に同じ
+
+d1 $ n (run4) # sound "drum" --samplesの代わりにnってのも使えるらしい。あと、soundあとの方が入力と出力が左から右に流れていいかも。
+
+-- ポリメーター: {}を使用する。ポリリズムとは違い、拍の長さは2つのパターンで共有する。左のパターンの拍が採用される
+
+d1 $ sound "{bd hh sn cp, arpy bass2 drum notes can}" -- 四分音符の拍で、4つと5つのパターン同時演奏
+
+d1 $ sound "{~ ~ ~ ~, arpy bass2 drum notes can}" -- 拍だけ休符で指定 4/5拍子
+
+d1 $ sound "{arpy bass2 drum notes can}%4" --簡便
+
+-- タイムシフト: <~ と ~>で指定した拍の時間分ずらす
+d1 $ (0.25 <~) $ sound "bd*2 cp*2 hh sn"
+
+-- 乱数: rand 0.0~1.0 , irand arg 整数の乱数
+d1 $ (~>) "0 0.25 0.1" $ sound "bd*2 cp*2 hh sn" # n (irand 10) --タイムシフトとの組み合わせ(タイムシフトは前置記法)
+
+-- fastcat: []の中全て合わせて1サイクル
+d1 $ fastcat
+[
+    sound "bd cp ~ hc",
+    sound "casio casio:1"
+]
+
+-- cat: オリジナルのスピードを維持
+d1 $ cat
+[
+    sound "cp*3",
+    sound "hh*2",
+    sound "bd"
+]
+
+-- stack: パターンを並行して演奏する。マルチトラック
+d1 $ stack
+[
+    sound "bd bd*2",
+    sound "hh*2 [sn cp] cp future*4",
+    sound (samples "arpy*8" (run 16))
+]

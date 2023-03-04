@@ -1,0 +1,29 @@
+import Sound.Tidal.Chords
+
+-- output the chord list
+chordList
+
+-- playing with Chords
+d1 $ n "c'maj e'min" # s "supermandolin"
+
+d1 $ note "c'maj e'min" # s "gtr"
+
+-- コードの転回 iをつけるごとに
+d1 $ n "c'major7'ii" # s "supermandolin"
+
+-- 6th voicing
+d1 $ n "c'major7'6" # s "supermandolin"
+
+-- open voicing
+d1 $ n "c'major7'o" # s "superpiano"
+
+-- ルート音はsやfをつけるとシャープやフラットになる
+d1 $ n "cf'maj c'maj cs'maj" # s "supermandolin"
+
+-- 和音のパターン
+d1 $ n ("c e f" |+ "<'maj 'min>") # s "supermandolin"
+
+-- ↑はこれと同じ
+d1 $ n "<[c'maj e'maj f'maj] [c'min e'min f'min]>" # s "supermandolin"
+
+hush

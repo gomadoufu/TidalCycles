@@ -1,17 +1,11 @@
-Server.killAll;
 
-Server.default.options.memSize = 65536;
-
-Server.default.options.numWireBufs = 128;
-
-ServerOptions.new.outDevice = "Mac book Pro Speakers";
-
-ServerOptions.new.outDevice = "External Headphones";
-
-ServerOptions.new.outDevice = "M4";
-
+//Run to Start
 SuperDirt.start;
 
+MIDIClient.init;
+
+
+//自動ダウンロードした拡張機能の場所
 Quarks.folder;
-
-
+//ユーザ用の拡張機能の場所
+Platform.userExtensionDir
